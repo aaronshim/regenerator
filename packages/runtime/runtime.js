@@ -30,7 +30,7 @@ var runtime = (function (exports) {
     // IE 8 has a broken Object.defineProperty that only works on DOM objects.
     define({}, "");
   } catch (err) {
-    define = function(obj, key, value) {
+    define = function (obj, key, value) {
       return obj[key] = value;
     };
   }
@@ -80,9 +80,9 @@ var runtime = (function (exports) {
   // .constructor.prototype properties for functions that return Generator
   // objects. For full spec compliance, you may wish to configure your
   // minifier not to mangle the names of these two functions.
-  function Generator() {}
-  function GeneratorFunction() {}
-  function GeneratorFunctionPrototype() {}
+  function Generator() { }
+  function GeneratorFunction() { }
+  function GeneratorFunctionPrototype() { }
 
   // This is a polyfill for %IteratorPrototype% for environments that
   // don't natively support it.
@@ -94,8 +94,8 @@ var runtime = (function (exports) {
   var getProto = Object.getPrototypeOf;
   var NativeIteratorPrototype = getProto && getProto(getProto(values([])));
   if (NativeIteratorPrototype &&
-      NativeIteratorPrototype !== Op &&
-      hasOwn.call(NativeIteratorPrototype, iteratorSymbol)) {
+    NativeIteratorPrototype !== Op &&
+    hasOwn.call(NativeIteratorPrototype, iteratorSymbol)) {
     // This environment has a native %IteratorPrototype%; use it instead
     // of the polyfill.
     IteratorPrototype = NativeIteratorPrototype;
@@ -119,24 +119,24 @@ var runtime = (function (exports) {
   // Helper for defining the .next, .throw, and .return methods of the
   // Iterator interface in terms of a single ._invoke method.
   function defineIteratorMethods(prototype) {
-    ["next", "throw", "return"].forEach(function(method) {
-      define(prototype, method, function(arg) {
+    ["next", "throw", "return"].forEach(function (method) {
+      define(prototype, method, function (arg) {
         return this._invoke(method, arg);
       });
     });
   }
 
-  exports.isGeneratorFunction = function(genFun) {
+  exports.isGeneratorFunction = function (genFun) {
     var ctor = typeof genFun === "function" && genFun.constructor;
     return ctor
       ? ctor === GeneratorFunction ||
-        // For the native GeneratorFunction constructor, the best we can
-        // do is to check its .name property.
-        (ctor.displayName || ctor.name) === "GeneratorFunction"
+      // For the native GeneratorFunction constructor, the best we can
+      // do is to check its .name property.
+      (ctor.displayName || ctor.name) === "GeneratorFunction"
       : false;
   };
 
-  exports.mark = function(genFun) {
+  exports.mark = function (genFun) {
     if (Object.setPrototypeOf) {
       Object.setPrototypeOf(genFun, GeneratorFunctionPrototype);
     } else {
@@ -151,7 +151,7 @@ var runtime = (function (exports) {
   // `yield regeneratorRuntime.awrap(x)`, so that the runtime can test
   // `hasOwn.call(value, "__await")` to determine if the yielded value is
   // meant to be awaited.
-  exports.awrap = function(arg) {
+  exports.awrap = function (arg) {
     return { __await: arg };
   };
 
@@ -164,22 +164,22 @@ var runtime = (function (exports) {
         var result = record.arg;
         var value = result.value;
         if (value &&
-            typeof value === "object" &&
-            hasOwn.call(value, "__await")) {
-          return PromiseImpl.resolve(value.__await).then(function(value) {
+          typeof value === "object" &&
+          hasOwn.call(value, "__await")) {
+          return PromiseImpl.resolve(value.__await).then(function (value) {
             invoke("next", value, resolve, reject);
-          }, function(err) {
+          }, function (err) {
             invoke("throw", err, resolve, reject);
           });
         }
 
-        return PromiseImpl.resolve(value).then(function(unwrapped) {
+        return PromiseImpl.resolve(value).then(function (unwrapped) {
           // When a yielded Promise is resolved, its final value becomes
           // the .value of the Promise<{value,done}> result for the
           // current iteration.
           result.value = unwrapped;
           resolve(result);
-        }, function(error) {
+        }, function (error) {
           // If a rejected Promise was yielded, throw the rejection back
           // into the async generator function so it can be handled there.
           return invoke("throw", error, resolve, reject);
@@ -191,7 +191,7 @@ var runtime = (function (exports) {
 
     function enqueue(method, arg) {
       function callInvokeWithMethodAndArg() {
-        return new PromiseImpl(function(resolve, reject) {
+        return new PromiseImpl(function (resolve, reject) {
           invoke(method, arg, resolve, reject);
         });
       }
@@ -231,7 +231,7 @@ var runtime = (function (exports) {
   // Note that simple async functions are implemented on top of
   // AsyncIterator objects; they just return a Promise for the value of
   // the final result produced by the iterator.
-  exports.async = function(innerFn, outerFn, self, tryLocsList, PromiseImpl) {
+  exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) {
     if (PromiseImpl === void 0) PromiseImpl = Promise;
 
     var iter = new AsyncIterator(
@@ -241,9 +241,9 @@ var runtime = (function (exports) {
 
     return exports.isGeneratorFunction(outerFn)
       ? iter // If outerFn is a generator, return the full iterator.
-      : iter.next().then(function(result) {
-          return result.done ? result.value : iter.next();
-        });
+      : iter.next().then(function (result) {
+        return result.done ? result.value : iter.next();
+      });
   };
 
   function makeInvokeMethod(innerFn, self, context) {
@@ -371,7 +371,7 @@ var runtime = (function (exports) {
 
     var info = record.arg;
 
-    if (! info) {
+    if (!info) {
       context.method = "throw";
       context.arg = new TypeError("iterator result is not an object");
       context.delegate = null;
@@ -419,11 +419,11 @@ var runtime = (function (exports) {
   // iterator prototype chain incorrectly implement this, causing the Generator
   // object to not be returned from this call. This ensures that doesn't happen.
   // See https://github.com/facebook/regenerator/issues/274 for more details.
-  define(Gp, iteratorSymbol, function() {
+  define(Gp, iteratorSymbol, function () {
     return this;
   });
 
-  define(Gp, "toString", function() {
+  define(Gp, "toString", function () {
     return "[object Generator]";
   });
 
@@ -458,7 +458,7 @@ var runtime = (function (exports) {
     this.reset(true);
   }
 
-  exports.keys = function(val) {
+  exports.keys = function (val) {
     var object = Object(val);
     var keys = [];
     for (var key in object) {
@@ -528,7 +528,7 @@ var runtime = (function (exports) {
   Context.prototype = {
     constructor: Context,
 
-    reset: function(skipTempReset) {
+    reset: function (skipTempReset) {
       this.prev = 0;
       this.next = 0;
       // Resetting context._sent for legacy support of Babel's
@@ -546,15 +546,15 @@ var runtime = (function (exports) {
         for (var name in this) {
           // Not sure about the optimal order of these conditions:
           if (name.charAt(0) === "t" &&
-              hasOwn.call(this, name) &&
-              !isNaN(+name.slice(1))) {
+            hasOwn.call(this, name) &&
+            !isNaN(+name.slice(1))) {
             this[name] = undefined;
           }
         }
       }
     },
 
-    stop: function() {
+    stop: function () {
       this.done = true;
 
       var rootEntry = this.tryEntries[0];
@@ -566,7 +566,7 @@ var runtime = (function (exports) {
       return this.rval;
     },
 
-    dispatchException: function(exception) {
+    dispatchException: function (exception) {
       if (this.done) {
         throw exception;
       }
@@ -584,7 +584,7 @@ var runtime = (function (exports) {
           context.arg = undefined;
         }
 
-        return !! caught;
+        return !!caught;
       }
 
       for (var i = this.tryEntries.length - 1; i >= 0; --i) {
@@ -626,22 +626,22 @@ var runtime = (function (exports) {
       }
     },
 
-    abrupt: function(type, arg) {
+    abrupt: function (type, arg) {
       for (var i = this.tryEntries.length - 1; i >= 0; --i) {
         var entry = this.tryEntries[i];
         if (entry.tryLoc <= this.prev &&
-            hasOwn.call(entry, "finallyLoc") &&
-            this.prev < entry.finallyLoc) {
+          hasOwn.call(entry, "finallyLoc") &&
+          this.prev < entry.finallyLoc) {
           var finallyEntry = entry;
           break;
         }
       }
 
       if (finallyEntry &&
-          (type === "break" ||
-           type === "continue") &&
-          finallyEntry.tryLoc <= arg &&
-          arg <= finallyEntry.finallyLoc) {
+        (type === "break" ||
+          type === "continue") &&
+        finallyEntry.tryLoc <= arg &&
+        arg <= finallyEntry.finallyLoc) {
         // Ignore the finally entry if control is not jumping to a
         // location outside the try/catch block.
         finallyEntry = null;
@@ -660,13 +660,13 @@ var runtime = (function (exports) {
       return this.complete(record);
     },
 
-    complete: function(record, afterLoc) {
+    complete: function (record, afterLoc) {
       if (record.type === "throw") {
         throw record.arg;
       }
 
       if (record.type === "break" ||
-          record.type === "continue") {
+        record.type === "continue") {
         this.next = record.arg;
       } else if (record.type === "return") {
         this.rval = this.arg = record.arg;
@@ -679,7 +679,7 @@ var runtime = (function (exports) {
       return ContinueSentinel;
     },
 
-    finish: function(finallyLoc) {
+    finish: function (finallyLoc) {
       for (var i = this.tryEntries.length - 1; i >= 0; --i) {
         var entry = this.tryEntries[i];
         if (entry.finallyLoc === finallyLoc) {
@@ -690,7 +690,7 @@ var runtime = (function (exports) {
       }
     },
 
-    "catch": function(tryLoc) {
+    "catch": function (tryLoc) {
       for (var i = this.tryEntries.length - 1; i >= 0; --i) {
         var entry = this.tryEntries[i];
         if (entry.tryLoc === tryLoc) {
@@ -708,7 +708,7 @@ var runtime = (function (exports) {
       throw new Error("illegal catch attempt");
     },
 
-    delegateYield: function(iterable, resultName, nextLoc) {
+    delegateYield: function (iterable, resultName, nextLoc) {
       this.delegate = {
         iterator: values(iterable),
         resultName: resultName,
@@ -755,6 +755,16 @@ try {
   if (typeof globalThis === "object") {
     globalThis.regeneratorRuntime = runtime;
   } else {
-    Function("r", "regeneratorRuntime = r")(runtime);
+    // From https://github.com/w3c/trusted-types/wiki/Trusted-Types-for-function-constructor.
+    if (self.trustedTypes && self.trustedTypes.createPolicy) {
+      var p = self.trustedTypes.createPolicy('regeneratorRuntime', {
+        createScript: function (_ignored) {
+          return "(function anonymous(r) { regeneratorRuntime = r })"
+        }
+      });
+      eval(p.createScript(''))(runtime);
+    } else {
+      Function("r", "regeneratorRuntime = r")(runtime);
+    }
   }
 }
