@@ -722,5 +722,15 @@ try {
   // you've misconfigured your bundler to force strict mode and applied a
   // CSP to forbid Function, and you're not willing to fix either of those
   // problems, please detail your unique predicament in a GitHub issue.
-  Function("r", "regeneratorRuntime = r")(runtime);
+  // From https://github.com/w3c/trusted-types/wiki/Trusted-Types-for-function-constructor.
+  if (self.trustedTypes && self.trustedTypes.createPolicy) {
+    var p = self.trustedTypes.createPolicy('regeneratorRuntime', {
+      createScript: function (_ignored) {
+        return "(function anonymous(r) { regeneratorRuntime = r })"
+      }
+    });
+    eval(p.createScript(''))(runtime);
+  } else {
+    Function("r", "regeneratorRuntime = r")(runtime);
+  }
 }
